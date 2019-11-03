@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://admin:gh0st@contact-keeper-cluster-6ok3i.mongodb.net/main?retryWrites=true&w=majority",
+  "jwtSecret": "algo-snare-secret-2020"
+}
