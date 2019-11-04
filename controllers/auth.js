@@ -4,6 +4,9 @@ const config = require('config');
 
 const userModel = require('../models/User');
 
+/**
+ * User Auth & Login
+ */
 exports.userAuthAndLogin = async (req, res) => {
   if (!req.body) {
     return res.status(400).json({ serverMessage: 'Empty request body' });
@@ -44,5 +47,24 @@ exports.userAuthAndLogin = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ serverMesaage: 'Server Error' });
+  }
+};
+
+/**
+ * Get Logged In User
+ */
+exports.getLoggedInUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log('ID: ', userId);
+
+    const loggedInUser = await userModel
+      .findById(userId)
+      .select('-password -__v');
+
+    res.json(loggedInUser);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ serverMessage: 'Server Error' });
   }
 };

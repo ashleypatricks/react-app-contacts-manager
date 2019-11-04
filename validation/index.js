@@ -40,7 +40,27 @@ const authenticateLoginValidator = async (req, res, next) => {
   next();
 };
 
+/***
+ * Create Contact Validator
+ */
+const createContactValidator = async (req, res, next) => {
+  req
+    .check('name', 'Name is required')
+    .not()
+    .isEmpty();
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    const errorCollection = errors.map(error => error.msg);
+    return res.status(400).json({ serverMessage: errorCollection });
+  }
+
+  next();
+};
+
 module.exports = {
   createUserValidator,
-  authenticateLoginValidator
+  authenticateLoginValidator,
+  createContactValidator
 };
