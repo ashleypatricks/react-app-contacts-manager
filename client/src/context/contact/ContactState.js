@@ -38,7 +38,8 @@ const ContactState = props => {
         type: 'professional'
       }
     ],
-    current: null
+    current: null, // The current contact being updated
+    filtered: null // The current contacts being filtered
   };
 
   // SET THE REDUCER //
@@ -84,21 +85,33 @@ const ContactState = props => {
   /**
    * Filter Contacts
    */
+  const filterContacts = queryText => {
+    dispatch({ type: FILTER_CONTACTS, payload: queryText });
+  };
 
   /**
    * Clear Filter
    */
+  const clearFilter = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
 
+  /**
+   * Return
+   */
   return (
     <ContactContext.Provider
       value={{
         contacts: state.contacts,
         current: state.current,
+        filtered: state.filtered,
         addContact,
         deleteContact,
         setCurrentContact,
         clearCurrent,
-        updateContact
+        updateContact,
+        filterContacts,
+        clearFilter
       }}
     >
       {props.children}
