@@ -35,7 +35,7 @@ const ContactState = props => {
         name: 'Martyn Morrison',
         email: 'martyn@live.co.uk',
         phone: '333-333-3333',
-        type: 'professional'
+        type: 'personal'
       }
     ],
     current: null, // The current contact being updated
