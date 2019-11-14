@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import AlertContext from '../../context/alert/alertContext';
 
 const Register = () => {
+  // Grab the Alert Context
+  const alertContext = useContext(AlertContext);
+
+  // Pull setAlert method out of the context
+  const { setAlert } = alertContext;
+
   // Use state setup
   const [user, setUser] = useState({
     name: '',
@@ -19,7 +26,12 @@ const Register = () => {
    */
   const onSubmit = e => {
     e.preventDefault();
-    console.log('Call a register submit function!!');
+
+    if (name === '' || email === '' || password === '') {
+      setAlert('Please enter all fields!', 'danger');
+    } else if (password !== passwordConfirmation) {
+      setAlert('Passwords do not match!', 'danger');
+    }
   };
 
   const { name, email, password, passwordConfirmation } = user;
@@ -32,7 +44,13 @@ const Register = () => {
       <form onSubmit={onSubmit} style={{ paddingTop: '50px' }}>
         <div className='form-group'>
           <label htmlFor='name'>Name</label>
-          <input type='text' name='name' value={name} onChange={onChange} />
+          <input
+            type='text'
+            name='name'
+            value={name}
+            onChange={onChange}
+            required
+          />
         </div>
         <div className='form-group'>
           <label htmlFor='email'>Email</label>
@@ -45,6 +63,8 @@ const Register = () => {
             name='password'
             value={password}
             onChange={onChange}
+            required
+            minLength='6'
           />
         </div>
         <div className='form-group'>
@@ -54,13 +74,14 @@ const Register = () => {
             name='passwordConfirmation'
             value={passwordConfirmation}
             onChange={onChange}
+            required
+            minLength='6'
           />
         </div>
         <input
           type='submit'
           value='Register'
           className='btn btn-primary btn-block'
-          Register
         />
       </form>
     </div>
