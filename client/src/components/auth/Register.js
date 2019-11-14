@@ -1,12 +1,27 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
+import AuthContext from '../../context/auth/authContext';
 
 const Register = () => {
   // Grab the Alert Context
   const alertContext = useContext(AlertContext);
 
+  // Grab the Auth Contexy
+  const authContext = useContext(AuthContext);
+
   // Pull setAlert method out of the context
   const { setAlert } = alertContext;
+
+  // Pull registerUser method out of the context
+  const { registerUser, error, clearErrors } = authContext;
+
+  // Use Effect
+  useEffect(() => {
+    if (error === 'User already exists') {
+      setAlert(error, 'danger');
+      clearErrors();
+    }
+  }, [error]); // Run this when the error changes or the error is added to the state
 
   // Use state setup
   const [user, setUser] = useState({
@@ -31,6 +46,12 @@ const Register = () => {
       setAlert('Please enter all fields!', 'danger');
     } else if (password !== passwordConfirmation) {
       setAlert('Passwords do not match!', 'danger');
+    } else {
+      registerUser({
+        name,
+        email,
+        password
+      });
     }
   };
 
