@@ -1,10 +1,10 @@
 import React, { useReducer } from 'react';
 import AuthContext from './authContext';
 import authReducer from './authReducer';
+import setAuthToken from '../../utils/setAuthToken';
 import axios from 'axios';
 import {
   REGISTER_SUCCESS,
-  EGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
@@ -32,8 +32,20 @@ const AuthState = props => {
   /**
    * Load User
    */
-  const loadUser = () => {
-    console.log('Load user');
+  const loadUser = async () => {
+    // Set the token into a global header so we don't have to keep doing it with every request. We do it within Axios and pull it in here
+
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+    try {
+      const res = await axios.get('/api/auth');
+
+      dispatch({ type: USER_LOADED, payload: res.data });
+    } catch (error) {
+      dispatch({ type: AUTH_ERROR });
+    }
   };
 
   /**
@@ -51,6 +63,10 @@ const AuthState = props => {
       const res = await axios.post('/api/users', formData, config);
 
       dispatch({ type: REGISTER_SUCCESS, payload: res.data }); // res.data will be the jwt token
+
+      // Call Load User after you register a user
+      loadUser();
+      //
     } catch (error) {
       dispatch({
         type: REGISTER_FAIL,
@@ -62,15 +78,35 @@ const AuthState = props => {
   /**
    * Login User
    */
-  const loginUser = () => {
-    console.log('Login user');
+
+  const loginUser = async formData => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const res = await axios.post('/api/auth', formData, config);
+
+      dispatch({ type: LOGIN_SUCCESS, payload: res.data }); // res.data will be the jwt token
+
+      // Call Load User after you login a user
+      loadUser();
+      //
+    } catch (error) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: error.response.data.serverMessage
+      });
+    }
   };
 
   /**
    * Logout
    */
   const logoutUser = () => {
-    console.log('Logout user');
+    dispatch({ type: LOGOUT });
   };
 
   /**

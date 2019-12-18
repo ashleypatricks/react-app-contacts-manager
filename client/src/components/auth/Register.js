@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
 import AuthContext from '../../context/auth/authContext';
 
-const Register = () => {
+const Register = props => {
   // Grab the Alert Context
   const alertContext = useContext(AlertContext);
 
@@ -13,15 +13,22 @@ const Register = () => {
   const { setAlert } = alertContext;
 
   // Pull registerUser method out of the context
-  const { registerUser, error, clearErrors } = authContext;
+  const { registerUser, error, clearErrors, isAuthenticated } = authContext;
 
   // Use Effect
   useEffect(() => {
+    // Redirect if authenticated
+    if (isAuthenticated) {
+      props.history.push('/'); // Redirect to the dashboard
+    }
+
     if (error === 'User already exists') {
       setAlert(error, 'danger');
       clearErrors();
     }
-  }, [error]); // Run this when the error changes or the error is added to the state
+
+    // eslint-disable-next-line
+  }, [error, isAuthenticated, props.history]); // Run this when the error changes or the error is added to the state
 
   // Use state setup
   const [user, setUser] = useState({
