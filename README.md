@@ -1,6 +1,6 @@
 # Full Stack React & Express Contacts Manager
 
-This app is comprised of an Express server with authentication and CRUD capabilities. You can manage your contacts after registering and logging in to the app.
+This app is comprised of an Express server with authentication and CRUD capabilities & a React App. You can create and manage your contacts after registering and logging in to the app.
 
 The React App uses the Context API and React Hooks.
 
